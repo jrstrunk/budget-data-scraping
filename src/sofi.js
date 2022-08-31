@@ -37,17 +37,14 @@ export async function getBankingBalance(browser) {
     await page.click('button#verifyCode');
 
     // get the banking account balance
-    await page.waitForSelector('p.egBMLt.account-summary');
-    let balanceStr = await page
-        .evaluate(() => {
-            return document.querySelector('p.egBMLt.account-summary').innerText;
-        })
-        .catch(error => {
-            console.log('Error getting balance: ', error);
-        });
+    await page.waitForSelector("div[class^='StyledImpressionTracking']");
+    let accountSummaries = page.locator("div[class^='StyledImpressionTracking']");
+    let balanceStr = await accountSummaries.evaluateAll(
+        nodes => nodes?.[0].querySelectorAll('p')?.[2].innerText
+    );
 
     try {
-        var balance = parseFloat(balanceStr.replace(/[^0-9\.]/, ''));
+        var balance = parseFloat(balanceStr.replace(/[^0-9\.]/g, ''));
     } catch {
         console.log('Error parsing balance: ', balanceStr);
     }
