@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 
 // log in to sofi.com and get the user's checking account balance
-export async function getBankingBalance(browser) {
+export async function getSoFiBankingBalance(browser) {
     const page = await browser.newPage();
     await page.goto('https://www.sofi.com/login/');
 
